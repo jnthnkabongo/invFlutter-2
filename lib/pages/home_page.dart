@@ -1,5 +1,7 @@
+import 'package:bboxxlog/pages/accueil_page.dart';
 import 'package:bboxxlog/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget { // Correction ici
   const MyHomePage({super.key });
@@ -24,9 +26,19 @@ class MyHomePage extends StatefulWidget { // Correction ici
           _emailController.text,
           _passwordController.text);
           print('Connexion reussie: $response');
+          final token = response['access_token'];
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('access_token', token);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context)=> const AccueilPage()),
+            );
         } catch (e) {
           print('Connexion echouer: ${e.toString()}');
-       
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Erreur: ${e.toString()}'),
+          ));
         }
         print(_emailController.text);
         print(_passwordController.text);
@@ -60,15 +72,15 @@ class MyHomePage extends StatefulWidget { // Correction ici
               Image.asset(
                 'assets/images/image.png'
               ),
-              //const Padding(padding: EdgeInsets.only(bottom: 10),),
+              const Padding(padding: EdgeInsets.only(top: 20),),
               Image.asset(
-                'assets/images/1566_Bboxx Primary Logo.png',
+                'assets/images/risk_5858714.png',
                 height: 200,
                 width: 200,
               ),
-              //const Padding(padding: EdgeInsets.only(top: 10)),
+              const Padding(padding: EdgeInsets.only(top: 10)),
               const SizedBox(height: 10,),
-                Padding(padding: const EdgeInsets.all(30),
+                Padding(padding: const EdgeInsets.all(20),
                   child:  TextFormField(
                   controller: _emailController,
                   validator: (value){
@@ -94,7 +106,7 @@ class MyHomePage extends StatefulWidget { // Correction ici
                 //)
                 ),
               const SizedBox(height: 10,),
-                Padding(padding: const EdgeInsets.all(30),
+                Padding(padding: const EdgeInsets.all(20),
                 child:  TextFormField(
                   focusNode: _focusNode,
                   controller: _passwordController,
@@ -127,7 +139,7 @@ class MyHomePage extends StatefulWidget { // Correction ici
                   //style: const TextStyle(color: Colors.black),
                 //)
                 ),
-                Padding(padding: const EdgeInsets.all(30),
+                Padding(padding: const EdgeInsets.all(20),
                 child:
                 SizedBox(
                   width: double.infinity,
