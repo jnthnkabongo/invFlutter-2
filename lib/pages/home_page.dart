@@ -3,63 +3,71 @@ import 'package:bboxxlog/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MyHomePage extends StatefulWidget { // Correction ici
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key });
 
   @override
   State<MyHomePage> createState() => _MyHomePage();
 }
 
-  class _MyHomePage extends State<MyHomePage> {
+class _MyHomePage extends State<MyHomePage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isObscure = true;
+  final FocusNode _focusNode = FocusNode();
+  final ApiService _apiService = ApiService();
 
-    final _formKey = GlobalKey<FormState>();
-    final _emailController = TextEditingController();
-    final  _passwordController = TextEditingController();
-    bool _isObscure = true;
-    final FocusNode _focusNode = FocusNode();
-    final ApiService _apiService = ApiService();
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
+      String email = _emailController.text.trim();
+      String password = _passwordController.text.trim();
 
-    void _login() async{
-      if (_formKey.currentState!.validate()) {
-        try {
-          final response = await _apiService.login(
-          _emailController.text,
-          _passwordController.text);
-          print('Connexion reussie: $response');
-          final token = response['access_token'];
+      print('Email avant envoi: $email');
+      print('Mot de passe avant envoi: $password');
 
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('access_token', token);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context)=> const AccueilPage()),
-            );
-        } catch (e) {
-          print('Connexion echouer: ${e.toString()}');
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      try {
+        final response = await _apiService.login(email, password);
+        print('Connexion réussie: $response');
+        final token = response['access_token'];
+        final utilisateur = response['user']['name'];
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('access_token', token);
+        await prefs.setString('name', utilisateur);
+        //final userInfo = await _apiService.getUserinfo();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AccueilPage(),
+          ),
+        );
+      } catch (e) {
+        print('Connexion échouée: ${e.toString()}');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Erreur: ${e.toString()}'),
-          ));
-        }
-        print(_emailController.text);
-        print(_passwordController.text);
+        ));
       }
     }
+  }
 
-    @override
-    void initState() {
-      super.initState();
-      // Ajouter un listener pour le FocusNode
-      _focusNode.addListener(() {
-        setState(() {}); // Met à jour l'état lorsque le focus change
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   void dispose() {
-    _focusNode.dispose(); // Libérer le FocusNode
-    _passwordController.dispose(); // Libérer le controller
+    _focusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,95 +77,100 @@ class MyHomePage extends StatefulWidget { // Correction ici
           key: _formKey,
           child: Column(
             children: [
-              Image.asset(
-                'assets/images/image.png'
-              ),
-              const Padding(padding: EdgeInsets.only(top: 20),),
+              Image.asset('assets/images/image.png'),
+              const SizedBox(height: 20),
               Image.asset(
                 'assets/images/risk_5858714.png',
                 height: 200,
                 width: 200,
               ),
-              const Padding(padding: EdgeInsets.only(top: 10)),
-              const SizedBox(height: 10,),
-                Padding(padding: const EdgeInsets.all(20),
-                  child:  TextFormField(
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: TextFormField(
                   controller: _emailController,
-                  validator: (value){
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Veuillez remplir correctement le champs Adresse e-mail";
-                    }else if(!value.contains("@")){
-                      return "Veuillez remplir correctement le champs Adresse e-mail";
-                    }else if(!value.contains(".")){
-                      return "Veuillez remplir correctement le champs Adresse e-mail";
+                      return "Veuillez remplir correctement le champ Adresse e-mail";
+                    } else if (!value.contains("@") || !value.contains(".")) {
+                      return "Veuillez entrer une adresse e-mail valide";
                     }
                     return null;
                   },
-                  decoration:   const InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: "Adresse e-mail",
-                    labelStyle:  TextStyle(color: Colors.black),
+                    labelStyle: TextStyle(color: Colors.black),
                     floatingLabelStyle: TextStyle(color: Colors.blue),
                     filled: true,
                     fillColor: Colors.white,
-                    enabledBorder:  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 2.0)),
-                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 2.0)),
-                    )
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 2.0),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    ),
                   ),
-                //)
                 ),
-              const SizedBox(height: 10,),
-                Padding(padding: const EdgeInsets.all(20),
-                child:  TextFormField(
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: TextFormField(
                   focusNode: _focusNode,
                   controller: _passwordController,
                   obscureText: _isObscure,
-                  validator: (value){
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Veuillez entrer le bon mot de passe";
                     }
                     return null;
                   },
-                  decoration:   InputDecoration(
+                  decoration: InputDecoration(
                     labelText: "Mot de passe",
-                    labelStyle:  const TextStyle(color: Colors.black),
+                    labelStyle: const TextStyle(color: Colors.black),
                     floatingLabelStyle: const TextStyle(color: Colors.blue),
                     filled: true,
                     fillColor: Colors.white,
-                    enabledBorder:  const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 2.0)),
-                    focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 2.0)),
-                    suffixIcon: IconButton(onPressed: (){
-                      setState(() {
-                        _isObscure = !_isObscure;
-                      });
-                    }, icon: Icon(_isObscure ? Icons.visibility: Icons.visibility_off, color: _focusNode.hasFocus? Colors.blue : Colors.black
-                    ))
-                    //border: OutlineInputBorder(
-                      //borderRadius: BorderRadius.circular(5.0),
-                      //borderSide: BorderSide.none
-                    )
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 2.0),
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                      icon: Icon(
+                        _isObscure ? Icons.visibility : Icons.visibility_off,
+                        color: _focusNode.hasFocus ? Colors.blue : Colors.black,
+                      ),
+                    ),
                   ),
-                  //style: const TextStyle(color: Colors.black),
-                //)
                 ),
-                Padding(padding: const EdgeInsets.all(20),
-                child:
-                SizedBox(
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(onPressed: (){
-                    _login();
-                  },
+                  child: ElevatedButton(
+                    onPressed: _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)
-                      )
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
-                  child: const Text("Se connecter", style: TextStyle(fontSize: 20),)),
-                )
+                    child: const Text("Se connecter", style: TextStyle(fontSize: 20)),
+                  ),
+                ),
               )
             ],
-          )),
+          ),
+        ),
       ),
     );
   }

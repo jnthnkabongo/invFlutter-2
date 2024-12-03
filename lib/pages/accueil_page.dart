@@ -1,4 +1,3 @@
-import 'package:bboxxlog/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,53 +8,89 @@ class AccueilPage extends StatefulWidget {
   _AccueilPageState createState() => _AccueilPageState();
 }
 
+class _AccueilPageState extends State<AccueilPage> {
+  String? token; 
+  String? utilisateur;
 
-  class _AccueilPageState extends State<AccueilPage>{
-    String? _token;
+  @override
+  void initState() {
+    super.initState();
+    _getToken();
+    _getEmail(); 
+  }
 
-    Map<String, dynamic>? _userInfo;
-    
-    @override
-    void initState(){
-      super.initState();
-      _loadToken();
-    }
-    Future<void> _loadToken() async {
+  Future<void> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _token = prefs.getString('access_token'); // Récupérer le token
+      token = prefs.getString('access_token'); 
     });
-    if (_token != null) {
-      try {
-        final userInfoResponse = await ApiService().getUserinfo(_token!);
-        setState(() {
-          _userInfo = userInfoResponse;
-        });
-      } catch (e) {
-        print('Erreur lors de la recuperation des informations du user: ${e.toString()}');
-      }
-    }
-    // Ici, vous pouvez également appeler votre API pour récupérer les informations de l'utilisateur
-    // en utilisant le token pour authentifier la requête
-  } 
-   @override
+  }
+  Future<void> _getEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    utilisateur = prefs.getString('name');
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Information de l'utilisateur")),
+      // appBar: AppBar(
+      //   actions: [
+      //     Padding(
+      //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      //       child: Center(
+      //         child: Text(
+      //           utilisateur != null ? "Bienvenue, $utilisateur" : "Bienvenue",
+      //           style: const TextStyle(fontSize: 16),
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
       body: Center(
-        child: _userInfo != null
-        ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Nom: ${_userInfo!['name'] ?? 'inconnu'}"),
-            Text("Email: ${_userInfo!['email'] ?? 'inconnue'}"),
+            Image.asset('assets/images/image.png'),
+            const SizedBox(height: 20),
+            Text(
+              utilisateur != null ? "Bienvenue, $utilisateur " : "Bienvenue",
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 20),
+            const Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 90),
+                     IconButton(
+                      onPressed: null,
+                      icon: Icon(Icons.qr_code),
+                      iconSize: 180,
+                      color: Colors.black,),
+                    
+                      IconButton(onPressed: null,
+                        icon: Icon(Icons.bar_chart_outlined),
+                        iconSize: 180,
+                        color: Colors.black,)
+                  ]
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                // Déconnexion
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('access_token'); 
+                await prefs.remove('name'); 
+                Navigator.pop(context); 
+              },
+              child: const Text("Déconnexion"),
+            ),
           ],
-        )
-        : const CircularProgressIndicator()
-      ,),
+        ),
+      ),
     );
-  }   
+  }
 }
-  // This widget is the root of your application.
- 
-

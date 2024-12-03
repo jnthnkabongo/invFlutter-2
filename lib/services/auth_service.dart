@@ -3,40 +3,50 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String baseUrl = 'http://localhost:8000/api';
+  final String baseUrl = 'http://127.0.01:8000/api';
 
   Future<dynamic> login(String email, String password) async {
     final response = await http.post(Uri.parse('$baseUrl/login'),
     headers: {
-      'Context-Type' : 'application/json; charset=UTF-8'
+      'Context-Type' : 'application/json; charset=UTF-8',
+      'Accept' : 'application/json'
     },
-    body: 
-    {
+    body: {
       'email': email,
-      'password' : password
+      'password' : password,
     },
+    
     );
-    print(response);
+    print(response.statusCode);
+    print('email: $email');
+    print('password: $password');
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      return data;
     }else{
       throw Exception('Erreur de connexion: ${response.statusCode} - ${response.body} - ${response.headers}');
     }
   }
-  // Future<String?> loadToken() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString('acces_token');
-  // }
 
-  Future<Map<String, dynamic>> getUserinfo(String token) async {
+  Future<Map<String, dynamic>> getUserinfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    if (token == null) {
+      throw Exception('Token non trouver');
+    }
+
     final response = await http.get(
       Uri.parse('$baseUrl/users'),
       headers: {
         'Authorization' :'Baerer $token',
       },
     );
+
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      final userData = json.decode(response.body);
+
+      print('Informations utilisateur : $userData');
+      return userData;
     }else{
       print('Erreur lors de la récupération des informations de l\'utilisateur: ${response.statusCode}');
       print('Corps de la réponse: ${response.body}');
