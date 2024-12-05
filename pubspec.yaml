@@ -25,6 +25,7 @@ dependencies:
   flutter_native_splash: ^2.4.3
   flutter_launcher_icons: ^0.14.1
   shared_preferences: ^2.3.3
+  mobile_scanner: ^6.0.2
 
 dev_dependencies:
   flutter_test:

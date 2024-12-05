@@ -37,6 +37,11 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+     compileSdkVersion 34 // ou la version la plus récente
+
+    defaultConfig {
+        minSdkVersion 21 // ou la version la plus récente
+    }
 }
 
 flutter {

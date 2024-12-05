@@ -1,3 +1,4 @@
+import 'package:bboxxlog/pages/qrcode_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,19 +58,26 @@ class _AccueilPageState extends State<AccueilPage> {
               style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(height: 20),
-            const Column(
+            Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 90),
+                    const SizedBox(height: 90),
                      IconButton(
-                      onPressed: null,
-                      icon: Icon(Icons.qr_code),
+                      onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const QRCode(title: '',),
+                            ),
+                        );
+                      },
+                      icon: const Icon(Icons.qr_code),
                       iconSize: 180,
                       color: Colors.black,),
                     
-                      IconButton(onPressed: null,
+                      const IconButton(onPressed: null,
                         icon: Icon(Icons.bar_chart_outlined),
                         iconSize: 180,
                         color: Colors.black,)
