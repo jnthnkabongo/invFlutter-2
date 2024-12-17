@@ -1,4 +1,5 @@
 import 'package:bboxxlog/pages/accueil_page.dart';
+import 'package:bboxxlog/pages/menu_page.dart';
 import 'package:bboxxlog/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,11 +37,12 @@ class _MyHomePage extends State<MyHomePage> {
         await prefs.setString('access_token', token);
         await prefs.setString('name', utilisateur);
         //final userInfo = await _apiService.getUserinfo();
-
+        _emailController.clear();
+        _passwordController.clear();
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const AccueilPage(),
+            builder: (context) => const MenuPage(title: '',),
           ),
         );
       } catch (e) {
@@ -171,7 +173,7 @@ class _MyHomePage extends State<MyHomePage> {
             ],
           ),
         ),
-      ),
+      ),   
     );
   }
 }

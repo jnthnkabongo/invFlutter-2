@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String baseUrl = 'http://127.0.01:8000/api';
+  final String baseUrl = 'http://127.0.0.1:8000/api';
 
   Future<dynamic> login(String email, String password) async {
     final response = await http.post(Uri.parse('$baseUrl/login'),
@@ -15,7 +16,6 @@ class ApiService {
       'email': email,
       'password' : password,
     },
-    
     );
     print(response.statusCode);
     print('email: $email');
@@ -53,4 +53,21 @@ class ApiService {
       throw Exception('Echec de la recuperation des informations');
     }
   }
+
+  //inventory
+  Future<dynamic> savedValue(String itemId) async {
+    final response = await http.post(Uri.parse('$baseUrl/inventaire'),
+    headers: {
+      'Context-Type' : 'application/json; charset=UTF-8',
+      'Accept' : 'application/json'
+    },
+    body: {
+      'item_id': itemId,
+    },
+    );
+    if (response.statusCode != 201) {
+      throw Exception('Erreur lors de l\'enregistrement: ${response.body}');
+    }
+  }
+
 }
