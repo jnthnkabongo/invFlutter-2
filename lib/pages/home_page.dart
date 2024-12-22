@@ -31,11 +31,12 @@ class _MyHomePage extends State<MyHomePage> {
         final response = await _apiService.login(email, password);
         print('Connexion réussie: $response');
         final token = response['access_token'];
-        final utilisateur = response['user']['name'];
+        final utilisateur = response['user']['id'];
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', token);
-        await prefs.setString('name', utilisateur);
+        await prefs.setString('name', response['user']['name']);
+        await prefs.setString('id', utilisateur.toString());
         //final userInfo = await _apiService.getUserinfo();
         _emailController.clear();
         _passwordController.clear();

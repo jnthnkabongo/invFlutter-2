@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String baseUrl = 'http://127.0.0.1:8000/api';
+  final String baseUrl = 'https://inventaire.absolutgroupes.com/api';
 
   Future<dynamic> login(String email, String password) async {
     final response = await http.post(Uri.parse('$baseUrl/login'),
@@ -55,7 +55,7 @@ class ApiService {
   }
 
   //inventory
-  Future<dynamic> savedValue(String itemId) async {
+  Future<dynamic> savedValue(String itemId, String utilisateur) async {
     final response = await http.post(Uri.parse('$baseUrl/inventaire'),
     headers: {
       'Context-Type' : 'application/json; charset=UTF-8',
@@ -63,11 +63,20 @@ class ApiService {
     },
     body: {
       'item_id': itemId,
+      'user_id': utilisateur
     },
     );
     if (response.statusCode != 201) {
       throw Exception('Erreur lors de l\'enregistrement: ${response.body}');
     }
   }
+
+  Future<void> saveUserId(String userId) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('id', userId);
+  print('Identifiant: $userId'); // Enregistre l'ID
+  }
+
+
 
 }
