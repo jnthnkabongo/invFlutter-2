@@ -212,7 +212,8 @@ class _MyHomePageState extends State<QRCode> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('QR Scanner')),
-      body: Column(
+      body: SingleChildScrollView(
+      child:Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
@@ -253,6 +254,6 @@ class _MyHomePageState extends State<QRCode> {
           ),
         ],
       ),
-    );
+    ),);
   }
 }
