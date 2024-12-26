@@ -154,8 +154,29 @@ void initState() {
 @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: AppBar(
-      title: Text(widget.title),
+    appBar: PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight), // Définir la taille de l'AppBar
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // Couleur de l'ombre
+              spreadRadius: 0, 
+              blurRadius: 5, // Flou de l'ombre
+              offset: const Offset(0, 2), // Décalage de l'ombre
+            ),
+          ],
+        ),
+        child: AppBar(
+          title: const Text(
+            'Liste inventaire',
+            style: TextStyle(color: Colors.blueAccent), // Couleur du texte
+          ),
+          backgroundColor: Colors.transparent, // L'AppBar est transparente
+          elevation: 0, // Supprime l'ombre par défaut de l'AppBar
+        ),
+      ),
     ),
     body: SingleChildScrollView(
       child: Padding(

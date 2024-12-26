@@ -195,8 +195,13 @@ class _AccueilPageState extends State<AccueilPage> {
             Image.asset('assets/images/image.png'),
             const SizedBox(height: 20),
             Text(
-              utilisateur != null ? "Bienvenu(e), $utilisateur" : "Bienvenu(e)",
-              style: const TextStyle(fontSize: 20, color: Colors.blueAccent),
+              utilisateur != null 
+                ? "Bienvenu(e), ${utilisateur?.toUpperCase()}"
+                : "Bienvenu(e)",
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.blueAccent,
+              ),
             ),
             const SizedBox(height: 40,),
             Row(
@@ -252,15 +257,7 @@ class _AccueilPageState extends State<AccueilPage> {
               ],
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.remove('access_token');
-                await prefs.remove('name');
-                Navigator.pop(context);
-              },
-              child: const Text("Déconnexion"),
-            ),
+           
           ],
         ),
       ),
