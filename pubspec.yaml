@@ -34,7 +34,7 @@ dev_dependencies:
   flutter_lints: ^4.0.0
 
 flutter_launcher_icons:
-    image_path: "assets/images/risk_5858714.png"
+    image_path: "assets/images/logo.png"
     andoid: "launcher_icon"
     ios: true
     background_color: "#ffffff"
@@ -42,9 +42,9 @@ flutter_launcher_icons:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: "assets/images/risk_5858714 (2).png"
+  image: "assets/images/logo.png"
   android_12:
-    image: "assets/images/risk_5858714 (2).png"
+    image: "assets/images/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

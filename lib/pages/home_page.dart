@@ -81,13 +81,13 @@ class _MyHomePage extends State<MyHomePage> {
           child: Column(
             children: [
               Image.asset('assets/images/image.png'),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Image.asset(
-                'assets/images/risk_5858714.png',
-                height: 200,
-                width: 200,
+                'assets/images/logo.png',
+                height: 100,
+                width: 100,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: TextFormField(
