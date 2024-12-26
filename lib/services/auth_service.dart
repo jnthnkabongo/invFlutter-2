@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:bboxxlog/models/InventaireResponse.dart';
 import 'package:bboxxlog/models/inventaires.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String baseUrl = 'https://inventaire.absolutgroupes.com/api';
+  final String baseUrl = 'https://inventaire.absolutgroupes.com/api'; //http://127.0.0.1:8000/api/liste-materiels;
 
   Future<dynamic> login(String email, String password) async {
     final response = await http.post(Uri.parse('$baseUrl/login'),
@@ -77,8 +78,44 @@ class ApiService {
   //     throw Exception('Problème de connexion : ${response.body}');
   //   }
   // }
+  
+//   Future<List<Inventaire>> listeInventaire() async {
+//   final prefs = await SharedPreferences.getInstance();
+//   final token = prefs.getString('access_token');
 
-  Future<List<Inventaire>> listeInventaire() async {
+//   if (token == null) {
+//     throw Exception('Token non trouvé. Veuillez vous reconnecter.');
+//   }
+
+//   final response = await http.get(
+//     Uri.parse('$baseUrl/liste-materiel'),
+//     headers: {
+//       'Authorization': 'Bearer $token',
+//       'Accept': 'application/json',
+//     },
+//   );
+
+//   if (response.statusCode == 200) {
+//     final jsonResponse = json.decode(response.body);
+
+//     String userName = jsonResponse['user_name'];
+//     print('Nom de l\'utilisateur : $userName');
+
+//     if (jsonResponse['data'] is List) {
+//       return (jsonResponse['data'] as List)
+//       .map((inventaire) => Inventaire.fromJson(inventaire)).toList();
+//     } else {
+//       throw Exception('Le format des données est incorrect');
+//     }
+//     // List jsonResponse = json.decode(response.body);
+//     // return jsonResponse.map((inventaire) => Inventaire.fromJson(inventaire)).toList();
+//   } else if (response.statusCode == 401) {
+//     throw Exception('Utilisateur non authentifié. Veuillez vérifier votre connexion.');
+//   } else {
+//     throw Exception('Problème de connexion : ${response.body}');
+//   }
+// }
+Future<InventaireResponse> listeInventaire() async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
 
@@ -96,20 +133,21 @@ class ApiService {
 
   if (response.statusCode == 200) {
     final jsonResponse = json.decode(response.body);
-    if (jsonResponse['data'] is List) {
-      return (jsonResponse['data'] as List)
-      .map((inventaire) => Inventaire.fromJson(inventaire)).toList();
-    } else {
-      throw Exception('Le format des données est incorrect');
-    }
-    // List jsonResponse = json.decode(response.body);
-    // return jsonResponse.map((inventaire) => Inventaire.fromJson(inventaire)).toList();
+
+    final userName = jsonResponse['user_name'] as String? ?? 'Utilisateur inconnu';
+    final inventaires = (jsonResponse['data'] as List)
+        .map((inventaire) => Inventaire.fromJson(inventaire))
+        .toList();
+
+    return InventaireResponse(userName: userName, inventaires: inventaires);
   } else if (response.statusCode == 401) {
     throw Exception('Utilisateur non authentifié. Veuillez vérifier votre connexion.');
   } else {
     throw Exception('Problème de connexion : ${response.body}');
   }
 }
+
+
 
   //inventory
   Future<dynamic> savedValue(String itemId, String utilisateur) async {
