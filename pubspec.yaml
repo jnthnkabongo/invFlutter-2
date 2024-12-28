@@ -33,12 +33,19 @@ dev_dependencies:
 
   flutter_lints: ^4.0.0
 
-flutter_launcher_icons:
-    image_path: "assets/images/logo.png"
-    andoid: "launcher_icon"
-    ios: true
-    background_color: "#ffffff"
-    min_sdk_android: 21
+# flutter_launcher_icons:
+#     image_path: "assets/images/logo.png"
+#     andoid: "launcher_icon"
+#     ios: true
+#     background_color: "#ffffff"
+#     min_sdk_android: 21
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo-copie.png"
+  background_color: "#ffffff"
+  min_sdk_android: 21
 
 flutter_native_splash:
   color: "#ffffff"

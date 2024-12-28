@@ -21,7 +21,7 @@ class _MyloadingPageState extends State<MyLoadingPage> {
 
 Future<Timer> loadAnimation() async{
   return Timer(
-    const Duration(seconds: 10),
+    const Duration(seconds: 6),
     onLoaded
     );
 }
@@ -42,7 +42,7 @@ Future<Timer> loadAnimation() async{
           //child: Lottie.asset("assets/animations/loading")
           //child: Lottie.asset("assets/animations/loading.json")
           child: Lottie.asset(
-            "assets/animations/loading.json",
+            "assets/animations/loading-2.json",
             repeat: true
             ),
         ),

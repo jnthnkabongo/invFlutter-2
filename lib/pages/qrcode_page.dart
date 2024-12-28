@@ -211,7 +211,31 @@ class _MyHomePageState extends State<QRCode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('QR Scanner')),
+       appBar: PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight), // Définir la taille de l'AppBar
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 0, 
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: AppBar(
+          title: const Text(
+            'Scanner QR Code',
+            style: TextStyle(color: Colors.blueAccent),
+          ),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+      ),
+    ),
       body: SingleChildScrollView(
       child:Column(
         mainAxisAlignment: MainAxisAlignment.center,
