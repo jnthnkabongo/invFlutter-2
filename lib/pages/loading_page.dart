@@ -42,7 +42,7 @@ Future<Timer> loadAnimation() async{
           //child: Lottie.asset("assets/animations/loading")
           //child: Lottie.asset("assets/animations/loading.json")
           child: Lottie.asset(
-            "assets/animations/loading-2.json",
+            "assets/animations/loadind2.json",
             repeat: true
             ),
         ),

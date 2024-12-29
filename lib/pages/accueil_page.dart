@@ -188,6 +188,12 @@ class _AccueilPageState extends State<AccueilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        toolbarHeight: 2,
+        backgroundColor: Colors.blueAccent,
+        automaticallyImplyLeading: false,
+        ),
       body: //pages[pageIndex],
        Center(
          child: Column(
@@ -195,7 +201,7 @@ class _AccueilPageState extends State<AccueilPage> {
             Image.asset('assets/images/image.png'),
             const SizedBox(height: 20),
             Text(
-              utilisateur != null 
+              utilisateur != null
                 ? "Bienvenu(e), ${utilisateur?.toUpperCase()}"
                 : "Bienvenu(e)",
               style: const TextStyle(

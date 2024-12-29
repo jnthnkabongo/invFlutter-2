@@ -154,30 +154,40 @@ void initState() {
 @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: PreferredSize(
-      preferredSize: const Size.fromHeight(kToolbarHeight), // Définir la taille de l'AppBar
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2), // Couleur de l'ombre
-              spreadRadius: 0, 
-              blurRadius: 5, // Flou de l'ombre
-              offset: const Offset(0, 2), // Décalage de l'ombre
-            ),
-          ],
-        ),
-        child: AppBar(
-          title: const Text(
-            'Liste inventaire',
-            style: TextStyle(color: Colors.blueAccent), // Couleur du texte
+        appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.blueAccent,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 0,
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-          backgroundColor: Colors.transparent, // L'AppBar est transparente
-          elevation: 0, // Supprime l'ombre par défaut de l'AppBar
+          child: AppBar(
+            automaticallyImplyLeading: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Liste inventaire',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                SizedBox(width: 60)
+              ],
+            ),
+          ),
         ),
       ),
-    ),
     body: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20),

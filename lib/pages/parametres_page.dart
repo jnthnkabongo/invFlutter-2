@@ -38,33 +38,34 @@ class _ParametresPageState extends State<ParametresPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
        appBar: PreferredSize(
-      preferredSize: const Size.fromHeight(kToolbarHeight), // Définir la taille de l'AppBar
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 0, 
-              blurRadius: 5,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: AppBar(
-          title: const Text(
-            'Paramètres',
-            style: TextStyle(color: Colors.blueAccent),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.blueAccent,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 0,
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          child: AppBar(
+            title: const Center(
+              child:  Text(
+              'Paramètres',
+              style: TextStyle(color: Colors.white),
+            ),),
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
         ),
       ),
-    ),
       body: SingleChildScrollView(
-      
           child: Column(
             mainAxisAlignment:MainAxisAlignment.center,
             children: [

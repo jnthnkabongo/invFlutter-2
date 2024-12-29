@@ -212,38 +212,48 @@ class _MyHomePageState extends State<QRCode> {
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: PreferredSize(
-      preferredSize: const Size.fromHeight(kToolbarHeight), // Définir la taille de l'AppBar
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 0, 
-              blurRadius: 5,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: AppBar(
-          title: const Text(
-            'Scanner QR Code',
-            style: TextStyle(color: Colors.blueAccent),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.blueAccent,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 0,
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          child: AppBar(
+            automaticallyImplyLeading: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Scanner QR Code',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                SizedBox(width: 60)
+              ],
+            ),
+          ),
         ),
       ),
-    ),
       body: SingleChildScrollView(
       child:Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-              utilisateur != null ? "Bienvenu(e), $utilisateur" : "Bienvenu(e)",
-              style: const TextStyle(fontSize: 20, color: Colors.blueAccent),
-            ),
+          const SizedBox( height: 30),
+          // Text(
+          //     utilisateur != null ? "Bienvenu(e), $utilisateur" : "Bienvenu(e)",
+          //     style: const TextStyle(fontSize: 20, color: Colors.blueAccent),
+          //   ),
           SizedBox(
             height: 300,
             width: 300,
@@ -269,13 +279,23 @@ class _MyHomePageState extends State<QRCode> {
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              String itemId = _controller.text;
-              _soumettre(itemId);
-            },
-            child: const Text('Enregistrer'),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: (){
+                  String itemId = _controller.text;
+                _soumettre(itemId);}
+                ,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.blueAccent,
+                padding:const EdgeInsets.all(10)),
+              child:  const Text('Enregistrer'),
+            ),
+            ),
           ),
+          
         ],
       ),
     ),);
