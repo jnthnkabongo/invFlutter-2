@@ -72,7 +72,7 @@ class _ParametresPageState extends State<ParametresPage> {
               const SizedBox(height: 30),
               TextButton(
                 onPressed: () {
-                  print("Déconnexions");
+                  print("Déconnexion");
                 },
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(10),
@@ -86,7 +86,7 @@ class _ParametresPageState extends State<ParametresPage> {
                     ),
                      SizedBox(width: 20),
                      Text(
-                      'Changer de mot de passe',
+                      'Change le mot de passe',
                       style: TextStyle(fontSize: 20, color: Colors.blueAccent),
                     ),
                   ],
@@ -134,7 +134,7 @@ class _ParametresPageState extends State<ParametresPage> {
                     ),
                      SizedBox(width: 20),
                      Text(
-                      'Déconnexions',
+                      'Déconnexion',
                       style: TextStyle(fontSize: 20, color: Colors.blueAccent),
                     ),
                   ],
