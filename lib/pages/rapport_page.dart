@@ -131,10 +131,8 @@ class _MyTablePageState extends State<MyTablePage> {
                               color: Colors.grey,
                             ),
                             onTap: () async {
-                              // Récupérer l'itemid
                               final itemId = inventaires[index].itemid;
 
-                              // Appeler ton service pour récupérer les détails
                               try {
                                 final itemDetails = await _apiService.detailItems(itemId!);
 
@@ -144,6 +142,7 @@ class _MyTablePageState extends State<MyTablePage> {
                                     builder: (context) => DetailPage(
                                       item: itemDetails, // Passe les détails à la page de détails
                                       title: 'Détails de l\'item',
+                                      itemId:itemId,
                                     ),
                                   ),
                                 );

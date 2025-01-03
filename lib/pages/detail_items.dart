@@ -1,16 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:bboxxlog/services/auth_service.dart';
+import '../models/ItemResponse.dart';
 
-class DetailPage extends StatelessWidget {
-  final Map<String, dynamic> item; // Les détails de l'item
+class DetailPage extends StatefulWidget {
   final String title;
+  final String itemId;
+  final Item item;
 
-  const DetailPage({super.key, required this.item, required this.title});
+  const DetailPage({
+    super.key,
+    required this.title,
+    required this.itemId,
+    required this.item,
+  });
+
+  @override
+  State<DetailPage> createState() => _DetailPage();
+}
+
+class _DetailPage extends State<DetailPage> {
+  final ApiService _apiService = ApiService();
+  late Future<Item> _itemResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemResponse = _apiService.detailItems(widget.itemId);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
         backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
@@ -20,24 +42,200 @@ class DetailPage extends StatelessWidget {
           children: [
             Text(
               'Détails de l\'Item',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent,
+                  ),
             ),
             const SizedBox(height: 20),
-            Text('Nom de l\'item: ${item['name'] ?? 'Inconnu'}'),
-            Text('ID: ${item['itemid'] ?? 'Inconnu'}'),
-            Text('Description: ${item['description'] ?? 'Aucune description'}'),
-            Text('Description: ${item['shopname_id'] ?? 'Aucune description'}'),
-            Text('Description: ${item['numero_unique'] ?? 'Aucune description'}'),
-            Text('Description: ${item['quantite_id'] ?? 'Aucune description'}'),
-
-
-            // Ajoute ici d'autres champs pertinents de l'item
+            _buildDetailRow('Nom de l\'item', widget.item.name),
+            _buildDetailRow('ID', widget.item.id.toString()),
+            _buildDetailRow('Description', widget.item.description),
+            _buildDetailRow('Shop/DC/RC', widget.item.localisations.name.toString()),
+            _buildDetailRow('Numéro série', widget.item.numeroUnique),
+            _buildDetailRow('Quantité', widget.item.quantiteId.toString()),
+            // Ajoutez ici d'autres champs pertinents de l'item
           ],
         ),
       ),
     );
   }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: const TextStyle(fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: Text(widget.title), // Utilisation du titre passé
+  //     ),
+  //     body: FutureBuilder<Item>(
+  //       future: _itemResponse,
+  //       builder: (context, snapshot) {
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           return const Center(child: CircularProgressIndicator());
+  //         } else if (snapshot.hasError) {
+  //           return Center(child: Text('Erreur: ${snapshot.error}'));
+  //         } else if (snapshot.hasData) {
+  //           final item = snapshot.data!;
+  //           return Padding(
+  //             padding: const EdgeInsets.all(16.0),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text('Nom : ${item.name}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+  //                 const SizedBox(height: 10),
+  //                 Text('Description : ${item.description}'),
+  //                 const SizedBox(height: 10),
+  //                 Text('Numéro unique : ${item.numeroUnique}'),
+  //                 const SizedBox(height: 10),
+  //                 Text('Localisation : ${item.localisations.name}'),
+  //                 const SizedBox(height: 10),
+  //                 Text('Statut : ${item.status.status}'),
+  //                 const SizedBox(height: 10),
+  //                 Text('État : ${item.etatitems.state}'),
+  //                 const SizedBox(height: 10),
+  //                 Text('Type : ${item.typeitems.typeName}'),
+  //               ],
+  //             ),
+  //           );
+  //         }
+  //         return const Center(child: Text('Aucune donnée disponible'));
+  //       },
+  //     ),
+  //   );
+  // }
+
+// Bon
+// import 'package:flutter/material.dart';
+
+// class DetailPage extends StatelessWidget {
+//   final Map<String, dynamic> item; // Les détails de l'item
+//   final String title;
+
+//   const DetailPage({super.key, required this.item, required this.title});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(title),
+//         backgroundColor: Colors.blueAccent,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               'Détails de l\'Item',
+//               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.blueAccent,
+//                   ),
+//             ),
+//             const SizedBox(height: 20),
+//             _buildDetailRow('Nom de l\'item', item['name']?.toString() ?? 'Inconnu'),
+//             _buildDetailRow('ID', item['itemid']?.toString() ?? 'Inconnu'),
+//             _buildDetailRow('Description', item['description']?.toString() ?? 'Aucune description'),
+//             _buildDetailRow('Shop/DC/RC', item['shopname_id']?.toString() ?? 'Inconnu'),
+//             _buildDetailRow('Numéro série', item['numero_unique']?.toString() ?? 'Inconnu'),
+//             _buildDetailRow('Quantité', item['quantite_id']?.toString() ?? 'Inconnu'),
+
+//             // Ajoute ici d'autres champs pertinents de l'item
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildDetailRow(String label, String value) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 8.0),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Text(
+//             label,
+//             style: const TextStyle(
+//               fontWeight: FontWeight.bold,
+//               fontSize: 16,
+//             ),
+//           ),
+//           Expanded(
+//             child: Text(
+//               value,
+//               textAlign: TextAlign.right,
+//               style: const TextStyle(fontSize: 16),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+// import 'package:flutter/material.dart';
+
+// class DetailPage extends StatelessWidget {
+//   final Map<String, dynamic> item; // Les détails de l'item
+//   final String title;
+
+//   const DetailPage({super.key, required this.item, required this.title});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(title),
+//         backgroundColor: Colors.blueAccent,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               'Détails de l\'Item',
+//               style: Theme.of(context).textTheme.headlineMedium,
+//             ),
+//             const SizedBox(height: 20),
+//             Text('Nom de l\'item: ${item['name'] ?? 'Inconnu'}'),
+//             Text('ID: ${item['itemid'] ?? 'Inconnu'}'),
+//             Text('Description: ${item['description'] ?? 'Aucune description'}'),
+//             Text('Description: ${item['shopname_id'] ?? 'Aucune description'}'),
+//             Text('Description: ${item['numero_unique'] ?? 'Aucune description'}'),
+//             Text('Description: ${item['quantite_id'] ?? 'Aucune description'}'),
+
+
+//             // Ajoute ici d'autres champs pertinents de l'item
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 // import 'package:flutter/material.dart';
 // import 'package:bboxxlog/services/auth_service.dart';

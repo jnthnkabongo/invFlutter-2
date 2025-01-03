@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:bboxxlog/models/InventaireResponse.dart';
+import 'package:bboxxlog/models/ItemResponse.dart';
 import 'package:bboxxlog/models/inventaires.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String baseUrl = 'http://192.168.69.40:8000/api'; //http://127.0.0.1:8000/api/liste-materiels; http://192.168.69.40:8000/
+  final String baseUrl = 'http://192.168.0.172:8000/api'; //http://127.0.0.1:8000/api/liste-materiels; http://192.168.69.40:8000/
 
   Future<dynamic> login(String email, String password) async {
     final response = await http.post(Uri.parse('$baseUrl/login'),
@@ -110,7 +111,7 @@ class ApiService {
   print('Identifiant: $userId'); // Enregistre l'ID
   }
   
-  Future<Map<String, dynamic>> detailItems(String itemid) async {
+  Future<Item> detailItems(String itemid) async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('access_token');
 
@@ -122,14 +123,14 @@ class ApiService {
     Uri.parse('$baseUrl/inventairemateriel/$itemid'),
     headers: {
       'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json; charset=UTF-8',  // Correction de 'Context-Type' en 'Content-Type'
+      'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
     },
   );
 
   if (response.statusCode == 200) {
     print('Réponse API : ${response.body}');
-    return json.decode(response.body);
+    return Item.fromJson(json.decode(response.body)); // Conversion ici
   } else {
     print('Erreur API : ${response.statusCode} - ${response.body}');
     throw Exception(
@@ -137,6 +138,33 @@ class ApiService {
     );
   }
 }
+//   Future<Map<String, dynamic>> detailItems(String itemid) async {
+//   final prefs = await SharedPreferences.getInstance();
+//   final token = prefs.getString('access_token');
+
+//   if (token == null) {
+//     throw Exception('Token non trouvé. Veuillez vous reconnecter.');
+//   }
+
+//   final response = await http.get(
+//     Uri.parse('$baseUrl/inventairemateriel/$itemid'),
+//     headers: {
+//       'Authorization': 'Bearer $token',
+//       'Content-Type': 'application/json; charset=UTF-8',  // Correction de 'Context-Type' en 'Content-Type'
+//       'Accept': 'application/json',
+//     },
+//   );
+
+//   if (response.statusCode == 200) {
+//     print('Réponse API : ${response.body}');
+//     return json.decode(response.body);
+//   } else {
+//     print('Erreur API : ${response.statusCode} - ${response.body}');
+//     throw Exception(
+//       'Erreur lors de la récupération de l\'item : ${response.statusCode}',
+//     );
+//   }
+// }
 
   // Future<Map<String, dynamic>> detailItems(String itemid) async {
   //   final prefs = await SharedPreferences.getInstance();

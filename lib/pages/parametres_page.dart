@@ -108,7 +108,7 @@ class _ParametresPageState extends State<ParametresPage> {
                     ),
                      SizedBox(width: 20),
                      Text(
-                      'Changer de langue',
+                      'Changer la langue',
                       style: TextStyle(fontSize: 20, color: Colors.blueAccent),
                     ),
                   ],
