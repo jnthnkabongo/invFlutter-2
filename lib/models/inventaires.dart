@@ -9,7 +9,7 @@ class Inventaire {
 
   factory Inventaire.fromJson(Map<String, dynamic> json) {
     return Inventaire(
-      id: json['id'], 
+      id: json['id'],
       username: json['user_name'],
       userid: json['user_id'],
       itemid: json['item_id'],

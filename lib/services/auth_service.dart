@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String baseUrl = 'http://192.168.0.172:8000/api'; //http://127.0.0.1:8000/api/liste-materiels; http://192.168.69.40:8000/
+  final String baseUrl = 'http://192.168.1.85:8000/api'; //http://127.0.0.1:8000/api/liste-materiels; http://192.168.69.40:8000 / Bureau 192.168.1.85 Routeur Vodacom 192.168.123.35
 
   Future<dynamic> login(String email, String password) async {
     final response = await http.post(Uri.parse('$baseUrl/login'),
@@ -112,167 +112,62 @@ class ApiService {
   }
   
   Future<Item> detailItems(String itemid) async {
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('access_token');
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
 
-  if (token == null) {
-    throw Exception('Token non trouvé. Veuillez vous reconnecter.');
-  }
+    if (token == null) {
+      throw Exception('Token non trouvé. Veuillez vous reconnecter.');
+    }
 
-  final response = await http.get(
-    Uri.parse('$baseUrl/inventairemateriel/$itemid'),
-    headers: {
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Accept': 'application/json',
-    },
-  );
-
-  if (response.statusCode == 200) {
-    print('Réponse API : ${response.body}');
-    return Item.fromJson(json.decode(response.body)); // Conversion ici
-  } else {
-    print('Erreur API : ${response.statusCode} - ${response.body}');
-    throw Exception(
-      'Erreur lors de la récupération de l\'item : ${response.statusCode}',
+    final response = await http.get(
+      Uri.parse('$baseUrl/inventairemateriel/$itemid'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
     );
+
+    if (response.statusCode == 200) {
+      print('Réponse API : ${response.body}');
+      return Item.fromJson(json.decode(response.body)); // Conversion ici
+    } else {
+      print('Erreur API : ${response.statusCode} - ${response.body}');
+      throw Exception(
+        'Erreur lors de la récupération de l\'item : ${response.statusCode}',
+      );
+    }
   }
-}
-//   Future<Map<String, dynamic>> detailItems(String itemid) async {
-//   final prefs = await SharedPreferences.getInstance();
-//   final token = prefs.getString('access_token');
+  Future<InventaireResponse> fetchInventaireItems(String query) async {
+  final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
 
-//   if (token == null) {
-//     throw Exception('Token non trouvé. Veuillez vous reconnecter.');
-//   }
+    if (token == null) {
+      throw Exception('Token non trouvé. Veuillez vous reconnecter.');
+    }
 
-//   final response = await http.get(
-//     Uri.parse('$baseUrl/inventairemateriel/$itemid'),
-//     headers: {
-//       'Authorization': 'Bearer $token',
-//       'Content-Type': 'application/json; charset=UTF-8',  // Correction de 'Context-Type' en 'Content-Type'
-//       'Accept': 'application/json',
-//     },
-//   );
+    final response = await http.get(
+      Uri.parse('$baseUrl/rechercher-item?query=$query'),
+      headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+        },
+    );
 
-//   if (response.statusCode == 200) {
-//     print('Réponse API : ${response.body}');
-//     return json.decode(response.body);
-//   } else {
-//     print('Erreur API : ${response.statusCode} - ${response.body}');
-//     throw Exception(
-//       'Erreur lors de la récupération de l\'item : ${response.statusCode}',
-//     );
-//   }
-// }
-
-  // Future<Map<String, dynamic>> detailItems(String itemid) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final token = prefs.getString('access_token');
-
-  //   if (token == null) {
-  //     throw Exception('Token non trouvé. Veuillez vous reconnecter.');
-  //   }
-  //   final response = await http.get(
-  //     Uri.parse('$baseUrl/inventairemateriel/$itemid'),
-  //   headers: {
-  //     'Authorization': 'Bearer $token',
-  //     'Context-Type': 'application/json; charset=UTF-8',
-  //     'Accept': 'application/json',
-  //   },
-  // );
-
-  // if (response.statusCode == 200) {
-  //   print('Réponse API : ${response.body}');
-  //   return json.decode(response.body);
-  // } else {
-  //   print('Erreur API : ${response.statusCode} - ${response.body}');
-  //   throw Exception(
-  //     'Erreur lors de la récupération de l\'item : ${response.statusCode}',
-  //   );
-  // }
-
-    // final response = await http.get(Uri.parse('$baseUrl/liste-materiel/$itemid'),
-
-    // headers: {
-    //   'Authorization': 'Bearer $token',
-    //   'Context-Type' : 'application/json; charset=UTF-8',
-    //   'Accept' : 'application/json'
-    // },);
-    // if (response.statusCode == 200) {
-    //   return json.decode(response.body);
-    // }else {
-    //     throw Exception(
-    //         'Erreur lors de la récupération de l\'item : ${response.statusCode}');
-    // }
-
-  
-  // Future <dynamic> DetailItem(String item) async{
-  //   final url = Uri.parse('$baseUrl/inventaire-materiel-$item');
-  //   final response = await http.get(url);
-  //   if (response.statusCode == 200) {
-  //     return jsonDecode(response.body);
-  //   }else{
-  //     throw Exception('Erreur lors de l\'enregistrement: ${response.body}');
-  //   }
-  // }
-  //Affichage des enregistrements de l'utilisateur
-  // Future<List<Inventaire>> listeInventaire() async{
-  //   final response = await http.get(Uri.parse('$baseUrl/liste-materiels'));
-  //   if (response.statusCode == 200) {
-  //     List jsonResponse = json.decode(response.body);
-  //     return jsonResponse.map((inventaire) => Inventaire.fromJson(inventaire)).toList();
-  //   }else{
-  //     throw Exception('Probleme de connexion');
-  //   }
-  // }
-
-  //  Future<List<Inventaire>> listeInventaire() async {
-  //   final response = await http.get(Uri.parse('$baseUrl/liste-materiel'));
-  //   print('Response statusCode: ${response.statusCode}');
-  //   print('Response body: ${response.body}');
-  //   if (response.statusCode == 200) {
-  //     List jsonResponse = json.decode(response.body);
-  //     print('Données : $jsonResponse');
-  //     return jsonResponse.map((inventaire) => Inventaire.fromJson(inventaire)).toList();
-  //   } else {
-  //     throw Exception('Problème de connexion : ${response.body}');
-  //   }
-  // }
-//   Future<List<Inventaire>> listeInventaire() async {
-//   final prefs = await SharedPreferences.getInstance();
-//   final token = prefs.getString('access_token');
-
-//   if (token == null) {
-//     throw Exception('Token non trouvé. Veuillez vous reconnecter.');
-//   }
-
-//   final response = await http.get(
-//     Uri.parse('$baseUrl/liste-materiel'),
-//     headers: {
-//       'Authorization': 'Bearer $token',
-//       'Accept': 'application/json',
-//     },
-//   );
-
-//   if (response.statusCode == 200) {
-//     final jsonResponse = json.decode(response.body);
-
-//     String userName = jsonResponse['user_name'];
-//     print('Nom de l\'utilisateur : $userName');
-
-//     if (jsonResponse['data'] is List) {
-//       return (jsonResponse['data'] as List)
-//       .map((inventaire) => Inventaire.fromJson(inventaire)).toList();
-//     } else {
-//       throw Exception('Le format des données est incorrect');
-//     }
-//     // List jsonResponse = json.decode(response.body);
-//     // return jsonResponse.map((inventaire) => Inventaire.fromJson(inventaire)).toList();
-//   } else if (response.statusCode == 401) {
-//     throw Exception('Utilisateur non authentifié. Veuillez vérifier votre connexion.');
-//   } else {
-//     throw Exception('Problème de connexion : ${response.body}');
-//   }
-// }
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      print(response.body);
+      final userName = jsonResponse['user_name'] as String? ?? 'Utilisateur inconnu';
+      final inventaires = (jsonResponse['data'] as List)
+        .map((inventaire)=> Inventaire.fromJson(inventaire))
+        .toList();
+      return InventaireResponse(userName: userName, inventaires: inventaires);
+    } else if (response.statusCode == 401) {
+      print('Erreur : ${response.statusCode} - ${response.body}');
+      throw Exception('Aucune donnée trouvée');
+    }else {
+      throw Exception('Problème de connexion : ${response.body}');
+    }
+  }
 }
